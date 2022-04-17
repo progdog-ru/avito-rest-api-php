@@ -1,0 +1,26 @@
+{
+  "name": "progdog-ru/avito-rest-api-php",
+  "description": "Avito REST API client library for PHP",
+  "keywords": [
+    "avito",
+    "rest",
+    "api",
+    "php",
+    "avito.ru"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Evgeniy Kuskov",
+      "email": "ylive.tk@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Avito\\RestApi\\": "src/"
+    }
+  }
+}
