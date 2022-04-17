@@ -62,8 +62,36 @@ class AutoloadService implements ServiceInterface
      */
     public function getItemInfo(int $user_id, string $ad_id)
     {
-        $path = $this->getServiceBasePath() . '/' . $user_id . '/items/' . $ad_id;
+        $path = $this->getServiceBasePath() . '/' . $user_id . '/items/' . $ad_id . '/';
         $requestResult = $this->http_client->sendRequest($path, 'GET');
+
+        return $this->http_client->handleResult($requestResult);
+    }
+
+    /**
+     * ##Список отчетов об автозагрузке
+     * Отчеты отсортированы в порядке убывания даты загрузки, т.е. самый свежий отчет будет в самом начале списка
+     *
+     * @param int $user_id - Номер пользователя в Личном кабинете Авито
+     * @param int $per_page - Количество ресурсов на страницу
+     * @param int $page - Номер страницы
+     *
+     * @return mixed
+     */
+    public function getReports(int $user_id, int $per_page = null, int $page = null)
+    {
+        $path = $this->getServiceBasePath() . '/' . $user_id . '/reports/';
+        $data = [];
+
+        if ($per_page !== null) {
+            $data['per_page'] = $per_page;
+        }
+
+        if ($page !== null) {
+            $data['page'] = $page;
+        }
+
+        $requestResult = $this->http_client->sendRequest($path, 'GET', $data);
 
         return $this->http_client->handleResult($requestResult);
     }
