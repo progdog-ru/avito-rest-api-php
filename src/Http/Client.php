@@ -24,7 +24,7 @@ class Client implements ClientInterface
 
     private string $clientId;
     private string $secret;
-    private string $token;
+    private ?string $token;
 
     private int $refreshToken = 0;
 
