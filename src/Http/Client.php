@@ -95,14 +95,24 @@ class Client implements ClientInterface
     /**
      * @inheritDoc
      */
-    public function sendRequest($path, $method = 'GET', $data = array(), bool $useToken = true): stdClass
-    {
+    public function sendRequest(
+        $path, 
+        string $method = 'GET', 
+        array $data = [], 
+        bool $useToken = true
+    ): stdClass {
         $url = $this->apiUrl . '/' . $path;
         $method = strtoupper($method);
+        $headers = [];
+        
         $curl = curl_init();
 
         if ($useToken && !empty($this->token)) {
-            $headers = array('Authorization: Bearer ' . $this->token, 'Expect:');
+            $headers[] = 'Authorization: Bearer ' . $this->token;
+            $headers[] = 'Expect:';
+        }
+        
+        if (!empty($headers)) {
             curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         }
 

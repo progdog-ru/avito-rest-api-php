@@ -29,7 +29,12 @@ interface ClientInterface
      *
      * @return stdClass
      */
-    public function sendRequest($path, $method = 'GET', $data = [], bool $useToken = true): stdClass;
+    public function sendRequest(
+        $path, 
+        string $method = 'GET', 
+        array $data = [], 
+        bool $useToken = true
+    ): stdClass;
 
     /**
      * Process results
