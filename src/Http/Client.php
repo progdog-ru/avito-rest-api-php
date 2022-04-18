@@ -17,6 +17,20 @@ use Avito\RestApi\Storage\FileStorage;
 use Avito\RestApi\Storage\TokenStorageInterface;
 use stdClass;
 
+use function json_encode;
+use function json_decode;
+use function strtoupper;
+use function curl_init;
+use function curl_setopt;
+use function curl_exec;
+use function curl_getinfo;
+use function curl_error;
+use function curl_close;
+use function md5;
+use function http_build_query;
+use function substr;
+use function date;
+
 class Client implements ClientInterface
 {
 
@@ -96,43 +110,47 @@ class Client implements ClientInterface
      * @inheritDoc
      */
     public function sendRequest(
-        $path, 
-        string $method = 'GET', 
-        array $data = [], 
+        $path,
+        string $method = 'GET',
+        array $data = [],
         bool $useToken = true
     ): stdClass {
         $url = $this->apiUrl . '/' . $path;
         $method = strtoupper($method);
         $headers = [];
-        
+
         $curl = curl_init();
 
         if ($useToken && !empty($this->token)) {
             $headers[] = 'Authorization: Bearer ' . $this->token;
             $headers[] = 'Expect:';
         }
-        
-        if (!empty($headers)) {
-            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-        }
 
         switch ($method) {
             case 'POST':
                 curl_setopt($curl, CURLOPT_POST, count($data));
-                curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+                $headers[] = 'Content-Type:application/json';
                 break;
             case 'PUT':
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'PUT');
-                curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
+                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
+                $headers[] = 'Content-Type:application/json';
                 break;
             case 'DELETE':
                 curl_setopt($curl, CURLOPT_CUSTOMREQUEST, 'DELETE');
+                // TODO: Нужно ли установить headers в `Content-Type:application/json`?
+                // и $data закодировать в json ?
                 curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
                 break;
             default:
                 if (!empty($data)) {
                     $url .= '?' . http_build_query($data);
                 }
+        }
+
+        if (!empty($headers)) {
+            curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         }
 
         curl_setopt($curl, CURLOPT_URL, $url);
