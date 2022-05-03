@@ -133,6 +133,8 @@ class Client implements ClientInterface
                 if ($useToken) {
                     curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
                     $headers[] = 'Content-Type:application/json';
+                } else {
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
                 }
                 break;
             case 'PUT':
