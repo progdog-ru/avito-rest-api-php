@@ -22,7 +22,7 @@ class MessengerService implements ServiceInterface
     /**
      * @var string
      */
-    private string $base_path = 'messenger/v1/accounts';
+    private string $base_path = 'messenger';
 
     /**
      * @var ClientInterface
@@ -52,46 +52,35 @@ class MessengerService implements ServiceInterface
     }
 
     /**
-     * ##Добавление пользователя в blacklist 
+     * ## Добавление пользователя в blacklist 
      * Добавляет пользователя в blacklist
      *
      * @param int $user_id - Номер пользователя в Личном кабинете Авито
-     * @param 
      *
      * @return mixed
      */
-    public function addToBlacklist(int $user_id, string $ad_id)
+    public function addToBlacklist(int $user_id)
     {
-        $path = $this->getServiceBasePath() . '/' . $user_id . '/blacklist';
+        $path = $this->getServiceBasePath() . '/v1/accounts/' . $user_id . '/blacklist';
         $requestResult = $this->http_client->sendRequest($path, 'POST');
 
         return $this->http_client->handleResult($requestResult);
     }
 
     /**
-     * ##Список отчетов об автозагрузке
-     * Отчеты отсортированы в порядке убывания даты загрузки, т.е. самый свежий отчет будет в самом начале списка
+     * ## Включение уведомлений V2 (webhooks)
      *
-     * @param int $user_id - Номер пользователя в Личном кабинете Авито
-     * @param int $per_page - Количество ресурсов на страницу
-     * @param int $page - Номер страницы
+     * @param string $url - Url на который будут отправляться нотификации
      *
      * @return mixed
      */
-    public function getReports(int $user_id, int $per_page = null, int $page = null)
+    public function v2Webhook(string $url)
     {
-        $path = $this->getServiceBasePath() . '/' . $user_id . '/reports/';
-        $data = [];
-
-        if ($per_page !== null) {
-            $data['per_page'] = $per_page;
-        }
-
-        if ($page !== null) {
-            $data['page'] = $page;
-        }
-
-        $requestResult = $this->http_client->sendRequest($path, 'GET', $data);
+        $path = $this->getServiceBasePath() . '/v2/webhook';
+        $data = [
+            'url' => $url,
+        ];
+        $requestResult = $this->http_client->sendRequest($path, 'POST', $data);
 
         return $this->http_client->handleResult($requestResult);
     }
