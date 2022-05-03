@@ -129,10 +129,9 @@ class Client implements ClientInterface
         switch ($method) {
             case 'POST':
                 curl_setopt($curl, CURLOPT_POST, count($data));
-                curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-                
                 // для получения access_token данные отправляются в формате application/x-www-form-urlencoded
                 if ($useToken) {
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
                     $headers[] = 'Content-Type:application/json';
                 }
                 break;
