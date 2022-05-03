@@ -171,7 +171,7 @@ class Client implements ClientInterface
 
         curl_close($curl);
 
-        if ($headerCode === 401 && $this->refreshToken === 0) {
+        if ($headerCode === 401 || $headerCode === 403 && $this->refreshToken === 0) {
             ++$this->refreshToken;
             $this->getToken();
             $retval = $this->sendRequest($path, $method, $data);
