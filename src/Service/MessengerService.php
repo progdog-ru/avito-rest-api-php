@@ -155,6 +155,24 @@ class MessengerService implements ServiceInterface
     }
 
     /**
+     * ## Включение уведомлений (webhooks) version 1
+     *
+     * @param string $url - Url на который будут отправляться нотификации
+     *
+     * @return mixed
+     */
+    public function webhook(string $url)
+    {
+        $path = $this->getServiceBasePath() . '/v1/webhook';
+        $data = [
+            'url' => $url,
+        ];
+        $requestResult = $this->http_client->sendRequest($path, 'POST', $data);
+
+        return $this->http_client->handleResult($requestResult);
+    }
+
+    /**
      * ## Включение уведомлений V2 (webhooks)
      *
      * @param string $url - Url на который будут отправляться нотификации
