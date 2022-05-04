@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Avito\RestApi;
 
 use Avito\RestApi\Service\AutoloadService;
+use Avito\RestApi\Service\MessengerService;
 
 interface ApiInterface
 {
@@ -21,8 +22,16 @@ interface ApiInterface
      * 
      * @see https://developers.avito.ru/api-catalog/autoload/documentation
      *
-     * @param $campaignID
-     * @return mixed
+     * @return \Avito\RestApi\Service\AutoloadService
      */
     public function getAutoloadService(): AutoloadService;
+
+    /**
+     * Доступ к сервису для работы с апи сервиса Мессенджер
+     * 
+     * @see https://developers.avito.ru/api-catalog/messenger/documentation
+     *
+     * @return \Avito\RestApi\Service\MessengerService
+     */
+    public function getMessengerService(): MessengerService;
 }

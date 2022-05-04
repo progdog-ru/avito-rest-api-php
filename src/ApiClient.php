@@ -15,6 +15,7 @@ namespace Avito\RestApi;
 use Avito\RestApi\Http\Client;
 use Avito\RestApi\Http\ClientInterface;
 use Avito\RestApi\Service\AutoloadService;
+use Avito\RestApi\Service\MessengerService;
 use Exception;
 use Avito\RestApi\Storage\FileStorage;
 use Avito\RestApi\Storage\TokenStorageInterface;
@@ -28,6 +29,7 @@ class ApiClient implements ApiInterface
     private ClientInterface $http_client;
 
     private $autoload_service;
+    private $messenger_service;
 
     /**
      * Avito API constructor
@@ -55,5 +57,19 @@ class ApiClient implements ApiInterface
         $this->autoload_service = new AutoloadService($this->http_client);
 
         return $this->autoload_service;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getMessengerService(): MessengerService
+    {
+        if ($this->messenger_service instanceof MessengerService) {
+            return $this->messenger_service;
+        }
+
+        $this->messenger_service = new MessengerService($this->http_client);
+
+        return $this->messenger_service;
     }
 }
