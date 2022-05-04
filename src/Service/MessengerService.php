@@ -68,6 +68,93 @@ class MessengerService implements ServiceInterface
     }
 
     /**
+     * ## Получение информации по чатам
+     * Возвращает список чатов
+     * 
+     * @param int $user_id - Идентификатор пользователя (клиента)
+     * @param array $data - массив с query parameters.
+     * 
+     * ### Список query parameters:
+     * 
+     *  `item_ids` - string  
+     *  Example: `item_ids=12345,6789`
+     *  `unread_only` - boolean
+     *  Example: `unread_only=true`
+     *  `limit` - integer <int32>
+     *  Default: `100`
+     *  Example: `limit=50`
+     *  Количество чатов на странице (положительное число больше 0 и меньше 100). 
+     *  `offset` - integer <int32>
+     *  Default: `0`
+     *  Example: `offset=50`
+     *
+     * @return mixed
+     */
+    public function chats(
+        int $user_id,
+        array $data = [],
+    ) {
+        $path = $this->getServiceBasePath() . '/v1/accounts/' . $user_id . '/chats';
+
+        $requestResult = $this->http_client->sendRequest($path, 'GET', $data);
+
+        return $this->http_client->handleResult($requestResult);
+    }
+
+    /**
+     * ## Получение информации по чату
+     * Возвращает данные чата и последнее сообщение в нем
+     * 
+     * @param int $user_id - Идентификатор пользователя (клиента)
+     * @param string $chat_id - Идентификатор чата (клиента)
+     *
+     * @return mixed
+     */
+    public function chat(
+        int $user_id,
+        string $chat_id,
+    ) {
+        $path = $this->getServiceBasePath() . '/v1/accounts/' . $user_id . '/chats/' . $chat_id;
+
+        $requestResult = $this->http_client->sendRequest($path, 'GET');
+
+        return $this->http_client->handleResult($requestResult);
+    }
+
+    /**
+     * ## Получение списка сообщений
+     * Получение списка сообщений, используйте только для изначальной загрузки сообщений на экране, 
+     * для получения новых сообщений в реальном времени используйте webhooks.
+     * 
+     * @param int $user_id - Идентификатор пользователя (клиента)
+     * @param string $chat_id - Идентификатор чата (клиента)
+     * @param array $data - массив с query parameters.
+     * 
+     * ### Список query parameters:
+     * 
+     *  `limit` - integer <int32>
+     *  Default: `100`
+     *  Example: `limit=50`
+     *  Количество сообщений на странице (положительное число больше 0 и меньше 100). 
+     *  `offset` - integer <int32>
+     *  Default: `0`
+     *  Example: `offset=50`
+     *
+     * @return mixed
+     */
+    public function messages(
+        int $user_id,
+        string $chat_id,
+        array $data = [],
+    ) {
+        $path = $this->getServiceBasePath() . '/v1/accounts/' . $user_id . '/chats/' . $chat_id . '/messages/';
+
+        $requestResult = $this->http_client->sendRequest($path, 'GET', $data);
+
+        return $this->http_client->handleResult($requestResult);
+    }
+
+    /**
      * ## Включение уведомлений V2 (webhooks)
      *
      * @param string $url - Url на который будут отправляться нотификации
