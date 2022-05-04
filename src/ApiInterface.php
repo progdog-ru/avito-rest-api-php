@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Avito\RestApi;
 
 use Avito\RestApi\Service\AutoloadService;
+use Avito\RestApi\Service\ItemService;
 use Avito\RestApi\Service\MessengerService;
 
 interface ApiInterface
@@ -34,4 +35,13 @@ interface ApiInterface
      * @return \Avito\RestApi\Service\MessengerService
      */
     public function getMessengerService(): MessengerService;
+
+    /**
+     * Доступ к сервису для работы с апи сервиса Объявления
+     * 
+     * @see https://developers.avito.ru/api-catalog/item/documentation
+     *
+     * @return \Avito\RestApi\Service\MessengerService
+     */
+    public function getItemService(): ItemService;
 }

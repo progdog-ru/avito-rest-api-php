@@ -173,24 +173,6 @@ class MessengerService implements ServiceInterface
     }
 
     /**
-     * ## Включение уведомлений V2 (webhooks)
-     *
-     * @param string $url - Url на который будут отправляться нотификации
-     *
-     * @return mixed
-     */
-    public function v2Webhook(string $url)
-    {
-        $path = $this->getServiceBasePath() . '/v2/webhook';
-        $data = [
-            'url' => $url,
-        ];
-        $requestResult = $this->http_client->sendRequest($path, 'POST', $data);
-
-        return $this->http_client->handleResult($requestResult);
-    }
-
-    /**
      * ## Отключение уведомлений (webhooks)
      *
      * @param string $url - Url, на который необходимо перестать слать уведомления
@@ -200,6 +182,59 @@ class MessengerService implements ServiceInterface
     public function webhookUnsubscribe(string $url)
     {
         $path = $this->getServiceBasePath() . '/v1/webhook/unsubscribe';
+        $data = [
+            'url' => $url,
+        ];
+        $requestResult = $this->http_client->sendRequest($path, 'POST', $data);
+
+        return $this->http_client->handleResult($requestResult);
+    }
+
+    /**
+     * ## Получение списка сообщений V2
+     * 
+     * Получение списка сообщений. 
+     * Не помечает чат прочитанным. 
+     * После успешного списка сообщений необходимо вызвать метод, который сделает чат прочитанным.
+     *
+     * @param int $user_id - Идентификатор пользователя (клиента)
+     * @param string $chat_id - Идентификатор чата (клиента)
+     * @param array $data - массив с query parameters.
+     * 
+     * ### Список query parameters:
+     * 
+     *  `limit` - integer <int32>
+     *  Default: `100`
+     *  Example: `limit=50`
+     *  Количество сообщений на странице (положительное число больше 0 и меньше 100). 
+     *  `offset` - integer <int32>
+     *  Default: `0`
+     *  Example: `offset=50`
+     *
+     * @return mixed
+     */
+    public function v2Messages(
+        int $user_id,
+        string $chat_id,
+        array $data = [],
+    ) {
+        $path = $this->getServiceBasePath() . '/v2/accounts/' . $user_id . '/chats/' . $chat_id . '/messages/';
+
+        $requestResult = $this->http_client->sendRequest($path, 'GET', $data);
+
+        return $this->http_client->handleResult($requestResult);
+    }
+
+    /**
+     * ## Включение уведомлений V2 (webhooks)
+     *
+     * @param string $url - Url на который будут отправляться нотификации
+     *
+     * @return mixed
+     */
+    public function v2Webhook(string $url)
+    {
+        $path = $this->getServiceBasePath() . '/v2/webhook';
         $data = [
             'url' => $url,
         ];
