@@ -189,4 +189,22 @@ class MessengerService implements ServiceInterface
 
         return $this->http_client->handleResult($requestResult);
     }
+
+    /**
+     * ## Отключение уведомлений (webhooks)
+     *
+     * @param string $url - Url, на который необходимо перестать слать уведомления
+     *
+     * @return mixed
+     */
+    public function webhookUnsubscribe(string $url)
+    {
+        $path = $this->getServiceBasePath() . '/v1/webhook/unsubscribe';
+        $data = [
+            'url' => $url,
+        ];
+        $requestResult = $this->http_client->sendRequest($path, 'POST', $data);
+
+        return $this->http_client->handleResult($requestResult);
+    }
 }
