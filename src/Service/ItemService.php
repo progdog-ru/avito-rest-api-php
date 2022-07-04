@@ -72,4 +72,50 @@ class ItemService implements ServiceInterface
 
         return $this->http_client->handleResult($requestResult);
     }
+
+    /**
+     * ## Получение статистики по списку объявлений
+     * 
+     * Получение счетчиков по переданному списку объявлений пользователя.
+     * Внимание: в запросе может быть передано не более 200 идентификаторов объявлений
+     * Внимание: глубина такого запроса ограничена 270 днями.
+     * 
+     * @see https://developers.avito.ru/api-catalog/item/documentation#operation/itemStatsShallow
+     * 
+     * @param int $user_id - Идентификатор пользователя (клиента)
+     * @param string $dateFrom - required string (StatisticsDateFrom) Дата (в формате YYYY-MM-DD), с которой (включительно) надо получить статистику
+     * @param string $dateTo - required string (StatisticsDateTo) Дата (в формате YYYY-MM-DD), по которую (включительно) надо получить статистику 
+     * @param array $itemIds - required Array of integers (StatisticsItemIDs) Набор идентификаторов объявлений на сайте 
+     * @param array $fields - Array of strings (StatisticsFields) Items Enum: "views" "uniqViews" "contacts" "uniqContacts" "favorites" "uniqFavorites" Набор счетчиков, которые должны присутствовать в ответе
+     * @param string $periodGrouping - string (StatisticsPeriodGrouping) Enum: "day" "week" "month" Период группировки
+     * 
+     * @return mixed
+     */
+    public function itemStatsShallow(
+        int $user_id,
+        string $dateFrom,
+        string $dateTo,
+        array $itemIds,
+        array $fields = [
+            'views', 
+            'uniqViews', 
+            'contacts', 
+            'uniqContacts', 
+            'favorites',
+            'uniqFavorites'
+        ],
+        string $periodGrouping = 'day',
+    ) {
+        $path = '/stats/v1/accounts/' . $user_id . '/items/';
+        $data = [
+            'dateFrom' => $dateFrom,
+            'dateTo' => $dateTo,
+            'itemIds' => $itemIds,
+            'itemIds' => $fields,
+            'periodGrouping' => $periodGrouping,
+        ];
+        $requestResult = $this->http_client->sendRequest($path, 'POST', $data);
+
+        return $this->http_client->handleResult($requestResult);
+    }
 }
