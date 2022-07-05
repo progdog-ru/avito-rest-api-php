@@ -18,6 +18,10 @@ use Exception;
 use stdClass;
 
 use function date;
+use function date_create;
+use function date_sub;
+use function date_interval_create_from_date_string;
+use function date_format;
 
 class ItemService implements ServiceInterface
 {
@@ -118,9 +122,9 @@ class ItemService implements ServiceInterface
 
         // если $dateFrom равен null - тогда берем статистику за максимально возможный период
         if ($dateFrom === null) {
-            $date_to_int = strtotime($dateTo);
-            $date_from_int = $date_to_int - $max_days * 60 * 60 * 24;
-            $dateFrom = date('Y-m-d', $date_from_int);
+            $date_now = date_create();
+            date_sub($date_now, date_interval_create_from_date_string($max_days . ' days'));
+            $dateFrom = date_format($date_now, 'Y-m-d');
         }
 
         $data = [
