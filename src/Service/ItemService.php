@@ -17,6 +17,8 @@ use Avito\RestApi\Http\ClientInterface;
 use Exception;
 use stdClass;
 
+use function date;
+
 class ItemService implements ServiceInterface
 {
     /**
@@ -93,9 +95,9 @@ class ItemService implements ServiceInterface
      */
     public function itemStatsShallow(
         int $user_id,
-        string $dateFrom,
-        string $dateTo,
         array $itemIds,
+        ?string $dateFrom = null,
+        ?string $dateTo = null,
         array $fields = [
             'views', 
             'uniqViews', 
@@ -107,6 +109,20 @@ class ItemService implements ServiceInterface
         string $periodGrouping = 'day',
     ) {
         $path = '/stats/v1/accounts/' . $user_id . '/items/';
+        $max_days = 270;
+
+        // если не указана дата $dateTo - тода мы считаем этой датой текущую дату
+        if ($dateTo === null) {
+            $dateTo = date('Y-m-d');
+        }
+
+        // если $dateTo равен null - тогда берем статистику за максимально возможный период
+        if ($dateTo === null) {
+            $date_to_int = strtotime($dateTo);
+            $date_from_int = $date_to_int - $max_days * 60 * 60 * 24;
+            $dateTo = date('Y-m-d', $date_from_int);
+        }
+
         $data = [
             'dateFrom' => $dateFrom,
             'dateTo' => $dateTo,
