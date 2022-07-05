@@ -116,11 +116,11 @@ class ItemService implements ServiceInterface
             $dateTo = date('Y-m-d');
         }
 
-        // если $dateTo равен null - тогда берем статистику за максимально возможный период
-        if ($dateTo === null) {
+        // если $dateFrom равен null - тогда берем статистику за максимально возможный период
+        if ($dateFrom === null) {
             $date_to_int = strtotime($dateTo);
             $date_from_int = $date_to_int - $max_days * 60 * 60 * 24;
-            $dateTo = date('Y-m-d', $date_from_int);
+            $dateFrom = date('Y-m-d', $date_from_int);
         }
 
         $data = [
