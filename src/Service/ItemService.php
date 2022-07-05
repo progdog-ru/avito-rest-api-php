@@ -16,12 +16,9 @@ namespace Avito\RestApi\Service;
 use Avito\RestApi\Http\ClientInterface;
 use Exception;
 use stdClass;
+use Cake\Chronos\Chronos;
 
 use function date;
-use function date_create;
-use function date_sub;
-use function date_interval_create_from_date_string;
-use function date_format;
 
 class ItemService implements ServiceInterface
 {
@@ -122,9 +119,8 @@ class ItemService implements ServiceInterface
 
         // если $dateFrom равен null - тогда берем статистику за максимально возможный период
         if ($dateFrom === null) {
-            $date_now = date_create($dateTo);
-            $date_from = date_sub($date_now, date_interval_create_from_date_string($max_days . ' days'));
-            $dateFrom = date_format($date_from, 'Y-m-d');
+            $date = Chronos::parse('-' . $max_days . ' days');
+            $dateFrom = $date->toDateString();
         }
 
         $data = [
