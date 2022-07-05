@@ -110,7 +110,6 @@ class ItemService implements ServiceInterface
         string $periodGrouping = 'day',
     ) {
         $path = '/stats/v1/accounts/' . $user_id . '/items/';
-        $max_days = 270;
 
         // если не указана дата $dateTo - тода мы считаем этой датой текущую дату
         if ($dateTo === null) {
@@ -119,7 +118,7 @@ class ItemService implements ServiceInterface
 
         // если $dateFrom равен null - тогда берем статистику за максимально возможный период
         if ($dateFrom === null) {
-            $date = Chronos::parse('-' . $max_days . ' days');
+            $date = Chronos::parse('-8 months');
             $dateFrom = $date->toDateString();
         }
 
