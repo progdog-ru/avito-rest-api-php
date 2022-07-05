@@ -111,7 +111,7 @@ class ItemService implements ServiceInterface
             'dateFrom' => $dateFrom,
             'dateTo' => $dateTo,
             'itemIds' => $itemIds,
-            'itemIds' => $fields,
+            'fields' => $fields,
             'periodGrouping' => $periodGrouping,
         ];
         $requestResult = $this->http_client->sendRequest($path, 'POST', $data);
