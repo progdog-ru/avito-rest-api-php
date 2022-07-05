@@ -99,13 +99,10 @@ class ItemService implements ServiceInterface
         array $itemIds,
         ?string $dateFrom = null,
         ?string $dateTo = null,
-        array $fields = [
-            'views', 
+        array $fields = [ 
             'uniqViews', 
-            'contacts', 
             'uniqContacts', 
-            'favorites',
-            'uniqFavorites'
+            'uniqFavorites',
         ],
         string $periodGrouping = 'day',
     ) {
